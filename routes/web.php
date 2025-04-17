@@ -7,7 +7,12 @@ use App\Http\Controllers\DocumentGeneratorController;
 use App\Http\Controllers\DocumentController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard', [
+        'templates' => [
+            ['key' => 'residential-sale', 'name' => 'Residential Sale', 'description' => 'Sale of residential properties'],
+            ['key' => 'commercial-lease', 'name' => 'Commercial Lease', 'description' => 'Lease of commercial premises'],
+        ]
+    ]);
 });
 
 // ✅ All protected routes go inside auth middleware
