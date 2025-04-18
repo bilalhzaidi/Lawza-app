@@ -1,54 +1,37 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel</title>
+<x-guest-layout>
+    <div class="max-w-7xl mx-auto py-10 px-4">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">📄 Available Legal Documents</h1>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            @php
+                $documents = [
+                    'affidavit' => 'Affidavit',
+                    'application-for-name-correction' => 'Application for Name Correction',
+                    'bank-authority-letter' => 'Bank Authority Letter',
+                    'demand-letter' => 'Demand Letter',
+                    'gift-deed' => 'Gift Deed',
+                    'indemnity-bond' => 'Indemnity Bond',
+                    'partnership-deed' => 'Partnership Deed',
+                    'power-of-attorney' => 'Power of Attorney',
+                    'rent-deed' => 'Rent Deed',
+                    'sale-agreement' => 'Sales Agreement',
+                    'undertaking' => 'Undertaking',
+                    'will-document' => 'Last Will / Testament'
+                ];
+            @endphp
 
-    <!-- Vite -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="antialiased bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
-
-    <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen selection:bg-red-500 selection:text-white">
-        @if (Route::has('login'))
-            <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
-                @auth
-                    <a href="{{ url('/dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-                        Dashboard
+            @foreach($documents as $slug => $title)
+                <div class="bg-white rounded-lg shadow p-6 flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-700">{{ $title }}</h2>
+                        <p class="text-sm text-gray-500 mt-1">Click to generate this document.</p>
+                    </div>
+                    <a href="{{ route('login') }}?next={{ $slug }}"
+                       class="mt-4 inline-block text-center bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded text-sm font-medium">
+                        View Document
                     </a>
-                @else
-                    <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">Log in</a>
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">Register</a>
-                    @endif
-                @endauth
-            </div>
-        @endif
-
-        <div class="max-w-7xl mx-auto p-6 lg:p-8">
-
-            <!-- Alpine.js Test Start -->
-            <div x-data="{ open: false }" class="mt-8 text-center">
-                <button @click="open = !open" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">
-                    Toggle Alpine Box
-                </button>
-
-                <div x-show="open" class="mt-4 bg-green-200 text-green-900 p-4 rounded shadow transition-all">
-                    ✅ Alpine.js is working!
                 </div>
-            </div>
-            <!-- Alpine.js Test End -->
-
-            <!-- Existing Content (Docs, Laracasts, etc.) -->
-            <!-- Keep all your existing links and cards here -->
+            @endforeach
         </div>
     </div>
-
-</body>
-</html>
+</x-guest-layout>

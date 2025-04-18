@@ -1,36 +1,30 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DocumentGeneratorController;
-use App\Http\Controllers\DocumentController;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
 Route::get('/', function () {
-    return view('dashboard', [
-        'templates' => [
-            ['key' => 'residential-sale', 'name' => 'Residential Sale', 'description' => 'Sale of residential properties'],
-            ['key' => 'commercial-lease', 'name' => 'Commercial Lease', 'description' => 'Lease of commercial premises'],
-        ]
-    ]);
+    if (Auth::check()) {
+        return view('dashboard');
+    }
+    return redirect()->route('login');
 });
 
-// ✅ All protected routes go inside auth middleware
-Route::middleware(['auth'])->group(function () {
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Document Form and Generate
-    Route::get('/document/form/{type}', [DocumentController::class, 'showForm'])->name('document.form');
-    Route::post('/document/generate/{type}', [DocumentController::class, 'generate'])->name('document.generate');
-
-    // OpenAI document generation route
-    Route::post('/generate-document', [DocumentGeneratorController::class, 'generate'])->name('generate.document');
-
-    // Legacy prompt-based form (optional)
-    Route::get('/generate-form', function () {
-        return view('generate');
-    });
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';
